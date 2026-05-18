@@ -330,8 +330,4 @@ This project is intended for:
 
 It is not intended to replace professional medical diagnosis or clinical decision-making.
 
----
 
-# License
-
-This project is licensed under the MIT License.
