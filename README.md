@@ -315,7 +315,7 @@ Planned future enhancements:
 |---|---|
 | Satyajeet Mohanty | Full Stack Development,ML Integration, Backend Architecture |
 | Biseswar Mohapatra | Full Stack Development, ML Integration, Backend Architecture |
-| Anwesh Behera | ML Integration,Research, Testing |
+| Anwesh Behera |Research, Testing,UI |
 | Rahul Mohanty | Research, UI, API, Testing, Deployment |
 
 ---
