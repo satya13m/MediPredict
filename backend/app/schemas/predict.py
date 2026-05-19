@@ -10,7 +10,6 @@ class PredictionRequest(BaseModel):
     @model_validator(mode="after")
     def validate_disease_and_features(self) -> "PredictionRequest":
         disease = self.disease.capitalize()
-
         if disease not in VALID_DISEASES:
             raise ValueError(
                 f"Invalid disease '{self.disease}'. "
@@ -30,7 +29,6 @@ class PredictionRequest(BaseModel):
             raise ValueError(
                 f"Unexpected features for {disease}: {extra}"
             )
-
         return self
 
 
@@ -42,6 +40,7 @@ class PredictionResponse(BaseModel):
     risk_label:         str
     confidence:         float
     confidence_percent: str
+    clinical_insight:   str                      = ""
     input_features:     dict[str, Any]
     shap_values:        dict[str, float]      | None = None
     top_risk_factors:   list[dict[str, Any]]  | None = None
