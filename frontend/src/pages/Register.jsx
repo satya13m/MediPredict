@@ -8,6 +8,26 @@ import { Label } from "@/components/ui/label";
 import { register } from "@/services/auth.service";
 import useAuthStore from "@/store/useAuthStore";
 
+function formatApiError(error) {
+  const detail = error?.response?.data?.detail ?? error?.response?.data;
+  if (Array.isArray(detail)) {
+    return detail
+      .map((item) => {
+        if (item?.msg && Array.isArray(item.loc)) {
+          return `${item.loc.join(".")}: ${item.msg}`;
+        }
+        return typeof item === "string" ? item : JSON.stringify(item);
+      })
+      .join("; ");
+  }
+  if (typeof detail === "object") {
+    return JSON.stringify(detail);
+  }
+  return String(
+    detail ?? error?.message ?? "Registration failed. Please try again.",
+  );
+}
+
 export default function Register() {
   const navigate = useNavigate();
   const { setAuth } = useAuthStore();
@@ -23,8 +43,8 @@ export default function Register() {
   const { mutate, isPending, error } = useMutation({
     mutationFn: () =>
       register({
-        username: form.username,
-        email: form.email,
+        username: form.username.trim(),
+        email: form.email.trim(),
         password: form.password,
       }),
     onSuccess: (res) => {
@@ -132,8 +152,7 @@ export default function Register() {
           {/* API error */}
           {error && (
             <div className="p-4 bg-red-50 border border-red-100 rounded-xl text-sm text-red-600">
-              {error.response?.data?.detail ||
-                "Registration failed. Please try again."}
+              {formatApiError(error)}
             </div>
           )}
 
