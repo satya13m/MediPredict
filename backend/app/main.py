@@ -10,7 +10,7 @@ from app.models.user import User
 from app.models.prediction import Prediction
 from app.routes import auth
 from app.routes import auth, predict                    
-from app.services.model_service import get_all_models  
+from app.services.model_service import load_all_models
 
 from app.routes import auth, predict, history
 
@@ -30,7 +30,7 @@ async def lifespan(app: FastAPI):
         result = await conn.execute(text("SELECT 1"))
         print("  ✅ Postgres connection successful")
 
-    get_all_models()                                    
+    load_all_models()                                    
     print("  ✅ ML models pre-loaded into cache")        
 
     print("  ✅ Backend ready")

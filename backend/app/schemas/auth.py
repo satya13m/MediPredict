@@ -6,12 +6,19 @@ class RegisterRequest(BaseModel):
     email: EmailStr | None = None
     password: str
 
+    @field_validator("email", mode="before")
+    @classmethod
+    def email_empty_to_none(cls, v):
+        if isinstance(v, str) and not v.strip():
+            return None
+        return v
+
     @field_validator("username")
     @classmethod
     def username_valid(cls, v):
         if len(v) < 3:
             raise ValueError("Username must be at least 3 characters")
-        if not v.replace("_","").replace("-","").isalnum():
+        if not v.replace("_", "").replace("-", "").isalnum():
             raise ValueError("Username can only contain letters, numbers, _ and -")
         return v
 
