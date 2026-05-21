@@ -99,7 +99,8 @@ def compute_top_shap(pipeline, input_df, feature_names, top_n=5):
                 "feature":    fname,
                 "value":      raw_values.get(fname, "N/A"),
                 "shap_value": round(float(shap_val), 4),
-                "impact":     "increases" if shap_val > 0 else "decreases",
+                "abs_impact": round(abs(float(shap_val)), 4),
+                "impact":     "increases risk" if shap_val > 0 else "decreases risk",
                 "direction":  "risk" if shap_val > 0 else "safety",
             })
 
