@@ -89,3 +89,26 @@ async def get_fields(disease: str) -> dict:
         "fields":        FIELD_ORDER[disease],
         "feature_count": len(FIELD_ORDER[disease]),
     }
+
+@router.post("/predict/debug")
+async def predict_debug(request: PredictionRequest):
+    from app.config.field_order import FIELD_ORDER
+    disease  = request.disease
+    features = request.features
+    expected = FIELD_ORDER[disease]
+
+    ordered_values = []
+    for field in expected:
+        val = features.get(field, "MISSING")
+        ordered_values.append(val)
+
+    return {
+        "disease":         disease,
+        "expected_fields": expected,
+        "received_fields": list(features.keys()),
+        "ordered_values":  ordered_values,
+        "field_count":     {
+            "expected": len(expected),
+            "received": len(features),
+        }
+    }

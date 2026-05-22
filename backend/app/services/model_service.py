@@ -15,12 +15,23 @@ def load_all_models():
     print(f"{'='*50}")
 
     for disease in diseases:
-        path = MODELS_DIR / f"{disease}_best_pipeline.pkl"
+        path = MODELS_DIR / f"best_{disease}_model.pkl"
         if not path.exists():
             print(f"  ❌ {disease}: NOT FOUND — {path}")
             continue
         try:
             _models[disease] = joblib.load(path)
+
+            # DEBUG START
+            pipeline = _models[disease]
+
+            print("\n====== MODEL DEBUG ======")
+
+            print( "Scaler features:",pipeline.named_steps["scaler"].n_features_in_)
+            print("Classifier features:",pipeline.named_steps["clf"].n_features_in_)
+            print("Classifier:",type(pipeline.named_steps["clf"]).__name__)
+            print("=========================\n")
+# DEBUG END
             clf_name = type(
                 _models[disease].named_steps["clf"]
             ).__name__
@@ -34,7 +45,7 @@ def load_model(disease: str):
     if disease not in _models:
         raise FileNotFoundError(
             f"Model for '{disease}' not loaded. "
-            f"Check that {disease}_best_pipeline.pkl "
+            f"Check that best_{disease}_model.pkl "
             f"exists in {MODELS_DIR}"
         )
     return _models[disease]
