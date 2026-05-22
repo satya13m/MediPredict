@@ -1,29 +1,37 @@
+# backend/app/config/field_order.py
+
 FIELD_ORDER = {
+
+    # All 8 features present — matches CSV exactly
     "Diabetes": [
-        "Pregnancies", "Glucose", "BloodPressure",
-        "SkinThickness", "Insulin", "BMI",
-        "DiabetesPedigreeFunction", "Age"
+        "Glucose", "BMI", "Age", "Pregnancies",
+        "SkinThickness", "Insulin",
+        "DiabetesPedigreeFunction", "BloodPressure"
     ],
+
+    # chol and fbs removed by ANOVA — only 11 features
     "Heart": [
-        "age", "sex", "cp", "trestbps", "chol",
-        "fbs", "restecg", "thalach", "exang",
-        "oldpeak", "slope", "ca", "thal"
+        "exang", "cp", "oldpeak", "thalach", "ca",
+        "slope", "thal", "sex", "age",
+        "trestbps", "restecg"
     ],
+
+    # pot removed by ANOVA — only 23 features
     "Kidney": [
-        "age", "bp", "sg", "al", "su",
-        "rbc", "pc", "pcc", "ba",
-        "bgr", "bu", "sc", "sod", "pot",
-        "hemo", "pcv", "wc", "rc",
-        "htn", "dm", "cad", "appet", "pe", "ane"
+        "hemo", "sg", "pcv", "al", "rc",
+        "htn", "dm", "rbc", "pc", "bgr",
+        "appet", "pe", "bu", "sod", "su",
+        "ane", "sc", "bp", "pcc", "cad",
+        "age", "wc", "ba"
     ],
+
+    # Gender and Total_Protiens removed by ANOVA — only 8 features
     "Liver": [
-        "Age", "Gender",
-        "Total_Bilirubin", "Direct_Bilirubin",
+        "Direct_Bilirubin", "Total_Bilirubin",
         "Alkaline_Phosphotase",
+        "Albumin_and_Globulin_Ratio", "Albumin",
         "Alamine_Aminotransferase",
-        "Aspartate_Aminotransferase",
-        "Total_Protiens", "Albumin",
-        "Albumin_and_Globulin_Ratio"
+        "Aspartate_Aminotransferase", "Age"
     ],
 }
 
