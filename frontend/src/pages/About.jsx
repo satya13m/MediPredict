@@ -371,7 +371,7 @@ export default function About() {
             <p className="text-sm text-slate-600 max-w-4xl leading-relaxed">
               As a signature{" "}
               <strong>
-                Final Year Research Project (FRP-2026, Group No: 01)
+                Final Year Research Project (FRP-2026, Section:2241006, Group No: 01)
               </strong>
               , our framework resolves clinical bottlenecks by unifying
               laboratory analytical markers with qualitative symptoms into an
@@ -941,41 +941,50 @@ export default function About() {
 
           {/* Core download triggers with custom states */}
           <div className="flex flex-wrap justify-center gap-4 pt-4">
-            <Button
-              onClick={() =>
-                showToast(
-                  "Preparing download packet for '06- 01 -proposal.pdf'...",
-                )
-              }
-              className="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm px-6 py-5 rounded-xl shadow-md border border-blue-600 flex items-center space-x-2.5"
+            <a
+              href="/resources/proposal.pdf"
+              download
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <FileText className="w-4 h-4" />
-              <span>Download Proposal PDF</span>
-            </Button>
+              <Button
+                onClick={() => showToast("Downloading Proposal PDF...")}
+                className="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm px-6 py-5 rounded-xl shadow-md border border-blue-600 flex items-center space-x-2.5"
+              >
+                <FileText className="w-4 h-4" />
+                <span>Download Proposal PDF</span>
+              </Button>
+            </a>
 
-            <Button
-              onClick={() =>
-                showToast(
-                  "Preparing download packet for 'MediPredict-Presentation.pptx'...",
-                )
-              }
-              className="bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs sm:text-sm px-6 py-5 rounded-xl shadow-md border border-orange-600 flex items-center space-x-2.5"
+            <a
+              href="/resources/presentation.pptx"
+              download
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <Download className="w-4 h-4" />
-              <span>Download Presentation PPTX</span>
-            </Button>
+              <Button
+                onClick={() => showToast("Downloading Presentation PPTX...")}
+                className="bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs sm:text-sm px-6 py-5 rounded-xl shadow-md border border-orange-600 flex items-center space-x-2.5"
+              >
+                <Download className="w-4 h-4" />
+                <span>Download Presentation PPTX</span>
+              </Button>
+            </a>
 
-            <Button
-              onClick={() =>
-                showToast(
-                  "Preparing download packet for 'Explainable-MultiModal-DiseasePrediction-Research.pdf'...",
-                )
-              }
-              className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs sm:text-sm px-6 py-5 rounded-xl shadow-md border border-indigo-600 flex items-center space-x-2.5"
+            <a
+              href="/resources/research-paper.pdf"
+              download
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <FileText className="w-4 h-4" />
-              <span>Download Research Paper PDF</span>
-            </Button>
+              <Button
+                onClick={() => showToast("Downloading Research Paper PDF...")}
+                className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs sm:text-sm px-6 py-5 rounded-xl shadow-md border border-indigo-600 flex items-center space-x-2.5"
+              >
+                <FileText className="w-4 h-4" />
+                <span>Download Research Paper PDF</span>
+              </Button>
+            </a>
           </div>
 
           {/* Crucial Medical Disclaimer */}

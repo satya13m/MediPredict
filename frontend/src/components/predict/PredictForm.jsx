@@ -17,6 +17,14 @@ export default function PredictForm({ disease, onSubmit, onBack, isLoading }) {
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
 
+  if (!config) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <p className="text-slate-500">Loading configuration...</p>
+      </div>
+    );
+  }
+
   const handleNumber = (key, value) => {
     setFormData((prev) => ({
       ...prev,
