@@ -23,22 +23,32 @@ import {
 // prediction=0 → model says negative → Low or Borderline based on confidence
 // prediction=1 → model says positive → High or Extreme based on confidence
 function getRisk(prediction, confidence) {
+  let riskLevel = "Low";
+
   if (prediction === 0) {
-    if (confidence < 0.3)
-      return {
-        level: "Low",
-        label: "Low Risk",
-        bg: "bg-emerald-50",
-        border: "border-emerald-200",
-        badge: "bg-emerald-100 text-emerald-700",
-        text: "text-emerald-600",
-        icon: CheckCircle,
-        iconColor: "text-emerald-500",
-        iconBg: "bg-emerald-100",
-      };
-    return {
-      level: "Borderline",
-      label: "Borderline Risk",
+    riskLevel = confidence < 0.3 ? "Low" : "Medium";
+  } else {
+    // Split the positive predictions so lower confidence isn't labeled "High"
+    if (confidence < 0.6) {
+      riskLevel = "Medium"; // 👈 50.4% confidence will now land here!
+    } else if (confidence < 0.8) {
+      riskLevel = "High";
+    } else {
+      riskLevel = "Extreme";
+    }
+  }
+
+  const map = {
+    Low: {
+      bg: "bg-emerald-50",
+      border: "border-emerald-200",
+      badge: "bg-emerald-100 text-emerald-700",
+      text: "text-emerald-600",
+      icon: CheckCircle,
+      iconColor: "text-emerald-500",
+      iconBg: "bg-emerald-100",
+    },
+    Medium: {
       bg: "bg-amber-50",
       border: "border-amber-200",
       badge: "bg-amber-100 text-amber-700",
@@ -46,35 +56,33 @@ function getRisk(prediction, confidence) {
       icon: AlertCircle,
       iconColor: "text-amber-500",
       iconBg: "bg-amber-100",
-    };
-  }
-
-  // prediction === 1
-  if (confidence < 0.75)
-    return {
-      level: "High",
-      label: "High Risk",
-      bg: "bg-red-50",
-      border: "border-red-200",
-      badge: "bg-red-100 text-red-700",
-      text: "text-red-500",
+    },
+    High: {
+      bg: "bg-orange-50",
+      border: "border-orange-200",
+      badge: "bg-orange-100 text-orange-700",
+      text: "text-orange-600",
       icon: AlertTriangle,
-      iconColor: "text-red-500",
+      iconColor: "text-orange-500",
+      iconBg: "bg-orange-100",
+    },
+    Extreme: {
+      bg: "bg-red-50",
+      border: "border-red-300",
+      badge: "bg-red-200 text-red-800",
+      text: "text-red-600",
+      icon: ShieldAlert,
+      iconColor: "text-red-600",
       iconBg: "bg-red-100",
-    };
+    },
+  };
+
   return {
-    level: "Extreme",
-    label: "Extreme Risk",
-    bg: "bg-rose-50",
-    border: "border-rose-300",
-    badge: "bg-rose-200 text-rose-800",
-    text: "text-rose-600",
-    icon: ShieldAlert,
-    iconColor: "text-rose-600",
-    iconBg: "bg-rose-100",
+    level: riskLevel,
+    label: `${riskLevel} Risk`,
+    ...(map[riskLevel] || map.Low),
   };
 }
-
 // ── AI insight generator ──────────────────────────────────────────────────────
 function generateInsight(topFactors, disease, riskLabel) {
   if (!topFactors || topFactors.length === 0) return null;
@@ -284,6 +292,17 @@ export default function ResultCard({ result, disease, onReset }) {
           </div>
         </div>
       )}
+
+      {/* No SHAP available — show a friendly explanation */}
+      {chartData.length === 0 &&
+        result.shap_values &&
+        Object.keys(result.shap_values).length === 0 && (
+          <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm text-sm text-slate-600">
+            SHAP explanations are not available for this model type. The backend
+            attempted multiple explainers and fell back to a model-appropriate
+            method; try a different sample or check server logs for details.
+          </div>
+        )}
 
       {/* Factor breakdown */}
       {topFactors.length > 0 && (
