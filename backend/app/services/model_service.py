@@ -26,30 +26,6 @@ def load_all_models():
 
         try:
             _models[disease] = joblib.load(path)
-
-            # ================= DEBUG START =================
-            pipeline = _models[disease]
-
-            print("\n====== MODEL DEBUG ======")
-
-            print(
-                "Scaler features:",
-                pipeline.named_steps["scaler"].n_features_in_
-            )
-
-            print(
-                "Classifier features:",
-                pipeline.named_steps["clf"].n_features_in_
-            )
-
-            print(
-                "Classifier:",
-                type(pipeline.named_steps["clf"]).__name__
-            )
-
-            print("=========================\n")
-            # ================= DEBUG END =================
-
             clf_name = type(
                 _models[disease].named_steps["clf"]
             ).__name__
