@@ -7,9 +7,7 @@ from app.config.settings import settings
 from app.core.database import engine
 from app.models.base import Base
 from app.models.user import User
-from app.models.prediction import Prediction
-from app.routes import auth
-from app.routes import auth, predict                    
+from app.models.prediction import Prediction                  
 from app.services.model_service import load_all_models
 
 from app.routes import auth, predict, history
