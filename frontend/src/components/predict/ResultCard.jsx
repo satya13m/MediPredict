@@ -168,9 +168,12 @@ export default function ResultCard({ result, disease, onReset }) {
   const risk = getRisk(result.prediction, result.confidence);
   const RiskIcon = risk.icon;
 
-  const topFactors = [...(result.top_risk_factors || [])].sort(
-    (a, b) => b.abs_impact - a.abs_impact,
-  );
+  const topFactors = [
+    ...(result.top_risk_features ||
+      result.top_risk_factors ||
+      result.top_risks ||
+      []),
+  ].sort((a, b) => b.abs_impact - a.abs_impact);
 
   const chartData = topFactors.map((f) => ({
     name: f.feature.length > 16 ? f.feature.slice(0, 16) + "…" : f.feature,
