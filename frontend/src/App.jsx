@@ -28,11 +28,7 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route
           path="/predict"
-          element={
-            <ProtectedRoute>
-              <Predict />
-            </ProtectedRoute>
-          }
+          element={<Predict />}
         />
         <Route
           path="/history"
