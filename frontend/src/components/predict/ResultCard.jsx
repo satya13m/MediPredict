@@ -1,3 +1,8 @@
+import RiskGauge from "./RiskGauge";
+import ShapChart from "./ShapChart";
+import ClinicalInsight from "./ClinicalInsight";
+import RecommendationBox from "./RecommendationBox";
+import PredictionTabs from "./PredictionTabs";
 import {
   BarChart3,
   RotateCcw,
@@ -184,173 +189,55 @@ export default function ResultCard({ result, disease, onReset }) {
   };
 
   return (
-    <div className="space-y-5">
-      {/* Main result */}
-      <div
-        className={`rounded-2xl p-8 text-center border-2 ${risk.bg} ${risk.border}`}
-      >
-        <div
-          className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${risk.iconBg}`}
-        >
-          <RiskIcon className={`w-8 h-8 ${risk.iconColor}`} />
+    <div className="space-y-6">
+      {/* TOP GRID */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        {/* LEFT */}
+        <div className="space-y-6">
+          <RiskGauge
+            confidence={parseFloat(result.confidence_percent)}
+            riskLevel={risk.label}
+            color={
+              risk.level === "Low"
+                ? "#10b981"
+                : risk.level === "Medium"
+                  ? "#f59e0b"
+                  : risk.level === "High"
+                    ? "#f97316"
+                    : "#ef4444"
+            }
+          />
+
+          <ClinicalInsight insight={insight} />
         </div>
-        <h3 className="text-2xl font-bold text-slate-800 mb-1">
-          {titleMap[risk.level]}
-        </h3>
-        <p className={`text-5xl font-extrabold mt-3 ${risk.text}`}>
-          {result.confidence_percent}
-        </p>
-        <p className="text-slate-500 text-sm mt-1">Prediction Confidence</p>
-        <div
-          className={`mt-4 inline-block px-4 py-1.5 rounded-full text-sm font-semibold ${risk.badge}`}
-        >
-          {risk.label}
+
+        {/* RIGHT */}
+        <div>
+          <PredictionTabs
+            summary={
+              <PatientSummary
+                inputs={result.input_features}
+                topFactors={topFactors}
+              />
+            }
+            shap={<ShapChart factors={topFactors} />}
+            recommendations={<RecommendationBox disease={disease} />}
+          />
         </div>
       </div>
 
-      {/* Patient summary */}
-      {result.input_features && (
-        <PatientSummary
-          inputs={result.input_features}
-          topFactors={topFactors}
-        />
-      )}
-
-      {/* AI insight */}
-      {insight && (
-        <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5 flex gap-3">
-          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-            <Brain className="w-4 h-4 text-blue-600" />
-          </div>
-          <div>
-            <div className="text-sm font-semibold text-blue-800 mb-1">
-              AI Clinical Insight
-            </div>
-            <p className="text-sm text-blue-700 leading-relaxed">{insight}</p>
-          </div>
-        </div>
-      )}
-
-      {/* SHAP chart */}
-      {chartData.length > 0 && (
-        <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
-          <div className="flex items-center gap-2 mb-4">
-            <BarChart3 className={`w-5 h-5 ${config.text}`} />
-            <h4 className="font-semibold text-slate-800">
-              Top Risk Factors (SHAP)
-            </h4>
-          </div>
-          <ResponsiveContainer width="100%" height={220}>
-            <BarChart
-              data={chartData}
-              layout="vertical"
-              margin={{ left: 8, right: 24 }}
-            >
-              <XAxis
-                type="number"
-                tick={{ fontSize: 11 }}
-                tickFormatter={(v) => v.toFixed(2)}
-              />
-              <YAxis
-                type="category"
-                dataKey="name"
-                tick={{ fontSize: 11 }}
-                width={130}
-              />
-              <Tooltip
-                formatter={(val, _, props) => [
-                  val.toFixed(4),
-                  props.payload.impact,
-                ]}
-                contentStyle={{
-                  borderRadius: "12px",
-                  border: "1px solid #e2e8f0",
-                  fontSize: 12,
-                }}
-              />
-              <Bar dataKey="value" radius={[0, 6, 6, 0]}>
-                {chartData.map((entry, i) => (
-                  <Cell
-                    key={i}
-                    fill={
-                      entry.impact === "increases risk" ? "#ef4444" : "#10b981"
-                    }
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-          <div className="flex gap-4 mt-2 text-xs text-slate-500">
-            <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-sm bg-red-400 inline-block" />{" "}
-              Increases risk
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-3 h-3 rounded-sm bg-emerald-400 inline-block" />{" "}
-              Decreases risk
-            </span>
-          </div>
-        </div>
-      )}
-
-      {/* No SHAP available — show a friendly explanation */}
-      {chartData.length === 0 &&
-        result.shap_values &&
-        Object.keys(result.shap_values).length === 0 && (
-          <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm text-sm text-slate-600">
-            SHAP explanations are not available for this model type. The backend
-            attempted multiple explainers and fell back to a model-appropriate
-            method; try a different sample or check server logs for details.
-          </div>
-        )}
-
-      {/* Factor breakdown */}
-      {topFactors.length > 0 && (
-        <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm">
-          <h4 className="font-semibold text-slate-800 mb-4">
-            Factor Breakdown
-          </h4>
-          <div className="space-y-3">
-            {topFactors.map((f, i) => (
-              <div key={i} className="flex items-center justify-between">
-                <div className="text-sm text-slate-700 font-medium">
-                  {f.feature}
-                </div>
-                <div className="flex items-center gap-3">
-                  <div
-                    className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                      f.impact === "increases risk"
-                        ? "bg-red-50 text-red-600"
-                        : "bg-emerald-50 text-emerald-600"
-                    }`}
-                  >
-                    {f.impact}
-                  </div>
-                  <div className="text-xs text-slate-400 w-16 text-right font-mono">
-                    {f.shap_value > 0 ? "+" : ""}
-                    {f.shap_value.toFixed(3)}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Disclaimer */}
-      <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-500 text-center leading-relaxed">
+      {/* DISCLAIMER */}
+      <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-slate-500 text-center leading-relaxed">
         ⚕️ This AI prediction is intended for screening assistance only and
-        should not replace professional medical diagnosis. Please consult a
-        qualified healthcare provider for clinical decisions.
+        should not replace professional medical diagnosis.
       </div>
 
-      {/* Reset */}
+      {/* RESET BUTTON */}
       <Button
         onClick={onReset}
         variant="outline"
-        className="w-full rounded-xl border-slate-200 text-slate-600 flex items-center gap-2"
+        className="w-full rounded-2xl h-12"
       >
-        <RotateCcw className="w-4 h-4" />
         Run Another Prediction
       </Button>
     </div>
