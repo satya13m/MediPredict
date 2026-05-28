@@ -11,22 +11,24 @@ class Settings(BaseSettings):
 
     FRONTEND_URL: str = "http://localhost:3000"
     ENVIRONMENT: str = "development"
-
-    # ADD THIS
+    
     ALLOWED_ORIGINS: str = ""
+    ML_MODELS_DIR: Path = BASE_DIR / "ml_models"
 
-    # ADD THIS
-    def get_allowed_origins(self):
+    # Moving the method processing cleanly below the configuration fields
+    def get_allowed_origins(self) -> list[str]:
+        if not self.ALLOWED_ORIGINS:
+            return []
         return [
             origin.strip()
             for origin in self.ALLOWED_ORIGINS.split(",")
             if origin.strip()
         ]
 
-    ML_MODELS_DIR: Path = BASE_DIR / "ml_models"
-
     class Config:
         env_file = BASE_DIR / ".env"
         env_file_encoding = "utf-8"
+        # Prevents pydantic from treating functions as data fields
+        arbitrary_types_allowed = True 
 
 settings = Settings()
