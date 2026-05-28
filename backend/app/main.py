@@ -50,7 +50,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.FRONTEND_URL, "http://localhost:3000","http://127.0.0.1:5173","https://medi-predict-tau.vercel.app"],
+    allow_origins=[settings.FRONTEND_URL, "http://localhost:3000","https://medi-predict-l6kvvvhsy-mohantyramesh1256-4826s-projects.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
